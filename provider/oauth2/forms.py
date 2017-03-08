@@ -298,8 +298,12 @@ class PasswordGrantForm(ScopeMixin, OAuthForm):
     def clean(self):
         data = self.cleaned_data
 
-        user = authenticate(username=data.get('username'),
-            password=data.get('password'))
+        user = authenticate(email=data.get('username'),
+                            password=data.get('password'))
+        
+        if user is None:
+            user = authenticate(username=data.get('username'),
+                                password=data.get('password'))
 
         if user is None:
             raise OAuthValidationError({'error': 'invalid_grant'})
